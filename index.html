@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="OWLS plans rover navigation directly over the dense feature map of an open-vocabulary VLM, with no task-specific training and no persistent map.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="OWLS: Open-world Language-conditioned Speed Fields for Zero-Shot Rover Navigation">
+  <meta property="og:description" content="OWLS plans rover navigation directly over the dense feature map of an open-vocabulary VLM, with no task-specific training and no persistent map.">
+  <meta property="og:url" content="https://chahyon-ku.github.io/owls/">
+  <meta property="og:image" content="https://chahyon-ku.github.io/owls/static/images/2_system.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OWLS: Open-world Language-conditioned Speed Fields for Zero-Shot Rover Navigation">
+  <meta name="twitter:description" content="OWLS plans rover navigation directly over the dense feature map of an open-vocabulary VLM, with no task-specific training and no persistent map.">
+  <meta name="twitter:image" content="https://chahyon-ku.github.io/owls/static/images/2_system.png">
+  <title>OWLS: Open-world Language-conditioned Speed Fields</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦉</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.4/css/academicons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.24/dist/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop has-text-centered">
+      <h1 class="title is-2 publication-title">OWLS: Open-world Language-conditioned Speed Fields for Zero-Shot Rover Navigation</h1>
+      <h2 class="subtitle is-4 publication-tagline">Rover navigation planned directly over a VLM's dense features, with no task-specific training, no map, and one camera.</h2>
+      <div class="is-size-5 publication-authors">
+        <span class="author-block"><a href="https://chahyon-ku.github.io">Chahyon Ku</a><sup>1,2</sup>,</span>
+        <span class="author-block"><a href="https://robotics.jpl.nasa.gov/who-we-are/people/erica-tevere/">Erica Tevere</a><sup>2</sup>,</span>
+        <span class="author-block"><a href="https://ggeorgak11.github.io">Georgios Georgakis</a><sup>2</sup>,</span>
+        <span class="author-block"><a href="https://robotics.jpl.nasa.gov/who-we-are/people/rudranarayan_mukherjee/">Rudra Mukherjee</a><sup>2</sup>,</span>
+        <span class="author-block"><a href="https://bucherb.github.io">Bernadette Bucher</a><sup>1</sup></span>
+      </div>
+      <div class="is-size-5 publication-authors">
+        <span class="author-block"><sup>1</sup>University of Michigan,</span>
+        <span class="author-block"><sup>2</sup>NASA Jet Propulsion Laboratory, California Institute of Technology</span>
+      </div>
+      <div class="publication-links">
+        <a class="button is-dark is-rounded" href="https://arxiv.org/pdf/2610.32596"><span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span></a>
+        <a class="button is-dark is-rounded" href="https://arxiv.org/abs/2610.32596"><span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span></a>
+        <a class="button is-dark is-rounded" href="#video"><span class="icon"><i class="fab fa-youtube"></i></span><span>Video</span></a>
+        <!-- TODO: link and enable once code is public -->
+        <button class="button is-dark is-rounded" disabled title="Code coming soon"><span class="icon"><i class="fab fa-github"></i></span><span>Code (coming soon)</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="video">
+  <div class="container is-max-desktop">
+    <video controls autoplay muted playsinline class="figure" src="static/videos/owls_video.mp4"></video>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Abstract</h2>
+    <div class="content has-text-justified">
+      <p>Semantics can provide a proxy for physical traversability. Terrain that looks like loose sand or a rock field is likely to have similar physical properties. Open-vocabulary vision-language models (VLMs) enable this physical reasoning over terrain outside any fixed label set.</p>
+      <p>We present Open-world Language-conditioned Speed Fields (OWLS), which plans directly over the dense feature map of a VLM. Prompted with a description of traversable terrain, the VLM scores every pixel of a single camera image; OWLS projects these scores onto the ground, adapts them to the platform with two morphological operations, and uses the result as the speed field of a minimum-time planner, so terrain appearance and obstacle clearance shape one trajectory.</p>
+      <p>OWLS needs no task-specific training, no terrain annotation, no persistent map, and no exteroceptive sensor beyond the camera. We evaluate it on a physical rover indoors and off-road, on simulated Mars and Moon rovers over 200 procedurally generated terrains, and on real planetary imagery.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Planning over the VLM's own output</h2>
+    <p class="section-lead">OWLS does not train a policy or build a map. It asks an off-the-shelf VLM which pixels match a description of traversable terrain, and plans the fastest path through that answer.</p>
+    <img src="static/images/2_system.png" alt="OWLS system diagram" class="figure">
+    <p class="caption">The VLM scores each pixel against the prompt; the scores are ground-projected into the robot frame, adapted to the platform by dilation and erosion, and used as the speed field of a minimum-time planner, whose trajectory a waypoint controller tracks.</p>
+    <video autoplay muted loop playsinline class="figure mt-5" src="static/videos/sim_pipeline_mars.mp4"></video>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">One pipeline, three rovers</h2>
+    <p class="section-lead">Moving to a new rover takes a measurement, not retraining: two morphological radii, set from the rover's geometry, decide which obstacles it can drive over and how much clearance it keeps.</p>
+    <img src="static/images/3_robots.png" alt="Rovers used in the experiments" class="figure">
+    <p class="caption">Real 4-wheeled rover (left), simulated Perseverance (middle), and simulated Pragyan (right).</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">A real rover, around moving people</h2>
+    <p class="section-lead">With one RGB camera and a laptop GPU, OWLS cleared static obstacles indoors and off-road in every trial, and avoided people and boxes moving through a hallway in 4 of 5. Because it keeps no map, each plan uses only the current image, so a person who has walked past no longer blocks the path.</p>
+    <div class="columns">
+      <div class="column">
+        <video autoplay muted loop playsinline class="figure" src="static/videos/real_outdoor_static.mp4"></video>
+        <p class="caption">Off-road, static obstacles.</p>
+      </div>
+      <div class="column">
+        <video autoplay muted loop playsinline class="figure" src="static/videos/real_indoor_dynamic.mp4"></video>
+        <p class="caption">Indoors, a person crossing the rover's path.</p>
+      </div>
+    </div>
+    <img src="static/images/4_real_dynamic.png" alt="Dynamic obstacle avoidance indoors" class="figure mt-4">
+    <p class="caption">Each perception cycle replans over the ground left unoccupied at that moment, so the heatmap excludes each person as they cross.</p>
+    <div class="table-container mt-5">
+      <table class="table is-narrow is-fullwidth results-table">
+        <thead><tr><th>Environment</th><th>Obstacles</th><th>GSAM2</th><th>DINOv3-patch</th><th>DINOv3-lang</th></tr></thead>
+        <tbody>
+          <tr><td>Indoor</td><td>Static</td><td><b>100</b></td><td>40</td><td>0</td></tr>
+          <tr><td>Indoor</td><td>Dynamic</td><td><b>80</b></td><td>20</td><td>0</td></tr>
+          <tr><td>Outdoor</td><td>Static</td><td><b>100</b></td><td>40</td><td>0</td></tr>
+          <tr><td>Outdoor</td><td>Dynamic</td><td><b>40</b></td><td>0</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">Success rate (%) of the real rover over 5 randomized trials per configuration, for OWLS planning over each feature map. Moving obstacles outdoors remain hard: under-segmentation in uncontrolled lighting and the lag between perception and control cost 3 of 5 trials.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Transfer to Mars and Moon rovers</h2>
+    <p class="section-lead">Without fine-tuning, OWLS reaches a goal 10&nbsp;m away on 58&ndash;60% of 100 unseen Martian terrains and 75&ndash;77% of lunar ones, more than twice the success of the NoMaD navigation foundation model on the same terrains, and faster on the terrains both solve.</p>
+    <video autoplay muted loop playsinline class="figure" src="static/videos/sim_mars_2view.mp4"></video>
+    <video autoplay muted loop playsinline class="figure mt-4" src="static/videos/terrain_sweep.mp4"></video>
+    <div class="table-container mt-5">
+      <table class="table is-narrow is-fullwidth results-table">
+        <thead><tr><th>Method</th><th>Perseverance (Mars) SR</th><th>Perseverance STE</th><th>Pragyan (Moon) SR</th><th>Pragyan STE</th></tr></thead>
+        <tbody>
+          <tr><td>NoMaD</td><td>23.0</td><td>0.119</td><td>35.0</td><td>0.217</td></tr>
+          <tr><td>OWLS + GSAM2 (ours)</td><td>58.0</td><td><b>0.319</b></td><td>75.0</td><td>0.561</td></tr>
+          <tr><td>OWLS + SAM 3 (ours)</td><td><b>60.0</b></td><td><b>0.319</b></td><td><b>77.0</b></td><td><b>0.597</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">Success rate (SR, %) and success-weighted time efficiency (STE) over the same 100 generated terrains per rover.</p>
+    <img src="static/images/5_qual_sim_success.png" alt="Simulation successes" class="figure mt-5 half-figure">
+    <p class="caption">Third-person (top) and top-down (bottom) views, for visualization only. Left: a valid path on the Moon, whose appearance lies far outside the VLM's training data. Right: threading two rocks on Mars with the clearance the erosion adds.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">The prompt steers the rover</h2>
+    <p class="section-lead">Since OWLS plans over the VLM's response to the prompt, asking for "rocks" instead of "ground" marks the hazards as traversable and drops success on Mars from 58% to 10% with Grounded SAM 2. The same dependence makes language brittle: with SAM 3, replacing "ground" by "area" or "region" yields empty masks and 0% success, so a wording must be checked against the VLM before deployment.</p>
+    <video autoplay muted loop playsinline class="figure" src="static/videos/prompt_sensitivity.mp4"></video>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Real Mars and Moon imagery</h2>
+    <p class="section-lead">On frames from the real Perseverance and Chandrayaan-3 Pragyan rovers, none used during development, the VLM separates ground from hazards across the domain gap but misreads deep shadow under extreme lighting.</p>
+    <img src="static/images/6_qual_space.png" alt="VLM heatmaps on Mars and Moon rover imagery" class="figure">
+    <p class="caption">Left: Mars (AI4Mars). Right: Moon (ISRO navcam). Each pair shows the input and the VLM's traversability heatmap (brighter is more traversable). Blue circles mark hazards correctly excluded; the red circle marks a shadowed region misclassified as obstacle under extreme lighting.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Where it fails</h2>
+    <p class="section-lead">Keeping no map has a cost: the most common failure is an obstacle forgotten once it leaves the camera's view. The flat-ground projection also misreads steep slopes, and the off-the-shelf VLM needs more compute than flight hardware offers today.</p>
+    <img src="static/images/5_qual_sim_failure.png" alt="Simulation failures" class="figure half-figure">
+    <p class="caption">Left: on Mars, an obstacle forgotten after leaving the field of view. Right: on the Moon, a slope read as a cliff by the flat-ground projection.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">More results</h2>
+    <div id="results-carousel" class="carousel">
+      <div class="item">
+        <video autoplay muted loop playsinline src="static/videos/real_outdoor_static.mp4"></video>
+        <p class="caption has-text-centered">Real rover, off-road</p>
+      </div>
+      <div class="item">
+        <video autoplay muted loop playsinline src="static/videos/real_indoor_dynamic.mp4"></video>
+        <p class="caption has-text-centered">Real rover, indoors, people crossing</p>
+      </div>
+      <div class="item">
+        <video autoplay muted loop playsinline src="static/videos/sim_mars_rover.mp4"></video>
+        <p class="caption has-text-centered">Perseverance, simulated Mars</p>
+      </div>
+      <div class="item">
+        <video autoplay muted loop playsinline src="static/videos/sim_moon_rover.mp4"></video>
+        <p class="caption has-text-centered">Pragyan, simulated Moon</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Acknowledgment</h2>
+    <p>A portion of this research was carried out at the Jet Propulsion Laboratory, California Institute of Technology, under a contract with the National Aeronautics and Space Administration (80NM0018D0004).</p>
+  </div>
+</section>
+
+<section class="section" id="bibtex">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">BibTeX</h2>
+    <pre><code>@article{ku2026owls,
+  title   = {OWLS: Open-world Language-conditioned Speed Fields for Zero-Shot Rover Navigation},
+  author  = {Ku, Chahyon and Tevere, Erica and Georgakis, Georgios and Mukherjee, Rudra and Bucher, Bernadette},
+  journal = {arXiv preprint arXiv:2610.32596},
+  year    = {2026}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="content has-text-centered is-size-7">
+    <p>Page layout adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> (CC BY-SA 4.0).</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.24/dist/js/bulma-carousel.min.js"></script>
+<script>bulmaCarousel.attach('#results-carousel', { slidesToScroll: 1, slidesToShow: 1, loop: true, infinite: true, autoplay: true, autoplaySpeed: 8000 });</script>
+
+</body>
+</html>
